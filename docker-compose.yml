@@ -9,21 +9,23 @@ services:
       - 5672:5672
       - 15672:15672
     networks:
-      - jobsity
+      - network_jobsity
   jobsity-mongodb:
     image: mongo:latest
     container_name: jobsity-mongodb
     ports:
       - 27018:27017
     networks:
-      - jobsity
+      - network_jobsity
     volumes:
       - mongodb_data:/data/db
+      - ./mongo-init-scripts:/docker-entrypoint-initdb.d
     environment:
+      MONGO_INITDB_DATABASE: jobsity
       MONGO_INITDB_ROOT_USERNAME: guest
       MONGO_INITDB_ROOT_PASSWORD: guest
-
+      
 networks:
-  jobsity:
+  network_jobsity:
 volumes:
   mongodb_data:
