@@ -1,0 +1,21 @@
+<div class="w-full max-w-7xl px-8 pb-6 mx-auto">
+  <div class="flex flex-col h-[80vh] gap-4">
+    <div class="flex flex-row mt-4">
+        <input [(ngModel)]="newMessage" class="flex-1 flex-grow p-2 border rounded-l-lg" placeholder="Write your message" (keydown.enter)="sendMessage()">
+        <button (click)="sendMessage()" class="flex-2 bg-appPrimary text-white rounded-r-lg px-4 py-2 hover:bg-appPrimary">
+          Send
+        </button>
+    </div>
+    <div #messageContainer class="overflow-y-auto pt-4">
+      <div *ngFor="let message of messages" class="flex flex-col p-2 overflow-y-auto">
+        <div class="flex items-center mb-2">
+          <div class="text-blue-500 font-semibold">{{ message?.sender?.username }}</div>
+          <div class="ml-2 text-gray-500">{{ message?.date | date: 'dd-MM-yy HH:mm:ss' }}</div>
+        </div>
+        <div class="bg-gray-100 p-2 rounded-lg">
+          {{ message?.text }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

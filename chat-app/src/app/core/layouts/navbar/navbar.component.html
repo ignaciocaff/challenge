@@ -1,0 +1,12 @@
+<div class="flex flex-row items-left justify-between bg-appPrimary py-3 px-10 h-auto">
+  <div class="flex flex-row items-left gap-2">
+     <img src="/assets/images/logo.png" class="w-full h-16 object-cover">
+  </div>
+  <div class="flex flex-row items-center gap-6" *ngIf='getLoggedUser() | async as user'>
+    <div class="text-white" > {{ user.username }}</div>
+    <button class="btn align-middle max-sm:hidden" (click)="logout()" data-cy="disconnect-btn">Logout</button>
+    <button class="btn sm:hidden" (click)="logout()">
+      <i class="bi bi-box-arrow-right text-black text-xl"></i>
+    </button>
+  </div>
+</div>

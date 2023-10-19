@@ -1,0 +1,11 @@
+<div class="fixed z-50 bottom-8 text-center w-full">
+  <div class="alert gap-0 shadow-lg rounded-2xl max-w-xl m-auto w-full bg-white">
+    <i class="bi text-2xl ms-2" [ngClass]="typeClass"></i>
+
+    <span class="mx-4">{{ message }}</span>
+
+    <span (click)="close()" class="cursor-pointer">
+      <i class="bi bi-x text-2xl"></i>
+    </span>
+  </div>
+</div>

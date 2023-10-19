@@ -1,0 +1,55 @@
+@tailwind base;
+
+@layer base {
+  h1 {
+    @apply text-6xl font-bold;
+  }
+
+  h2 {
+    @apply text-4xl font-bold;
+  }
+
+  h3 {
+    @apply text-2xl font-bold;
+  }
+}
+
+@layer components {
+  .btn-success {
+    @apply text-white font-medium;
+  }
+  .btn-warning {
+    @apply text-white font-medium;
+  }
+   .btn-primary {
+    @apply text-white font-medium;
+  }
+}
+
+@tailwind components;
+@tailwind utilities;
+@import '~bootstrap-icons/font/bootstrap-icons.css';
+
+@font-face {
+  font-family: 'GothamRounded';
+  src: url('./assets/fonts/GothamRounded-Light.ttf');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'GothamRounded';
+  src: url('./assets/fonts/GothamRounded-Regular.ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'GothamRounded';
+  src: url('./assets/fonts/GothamRounded-Medium.ttf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'GothamRounded';
+  src: url('./assets/fonts/GothamRounded-Bold.ttf');
+  font-weight: 700;
+}

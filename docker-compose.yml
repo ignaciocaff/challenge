@@ -1,0 +1,29 @@
+version: "3.5"
+services:
+  jobsity-rabbitmq:
+    container_name: jobsity-rabbitmq
+    hostname: jobsity-rabbitmq
+    image: rabbitmq:3-management
+    restart: unless-stopped
+    ports: 
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - jobsity
+  jobsity-mongodb:
+    image: mongo:latest
+    container_name: jobsity-mongodb
+    ports:
+      - 27018:27017
+    networks:
+      - jobsity
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: guest
+      MONGO_INITDB_ROOT_PASSWORD: guest
+
+networks:
+  jobsity:
+volumes:
+  mongodb_data:

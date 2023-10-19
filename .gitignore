@@ -1,0 +1,6 @@
+dist
+tmp
+.vscode
+.angular
+.husky
+node_modules

@@ -1,0 +1,17 @@
+<div class="container mx-auto flex flex-col gap-20 p-20">
+  <div class="text-appWarning font-bold text-6xl text-center flex flex-col gap-9">
+    <p>Unauthorized</p>
+    <i class="bi bi-shield-lock-fill"></i>
+  </div>
+  <div class="text-appSecondary font-bold text-center text-3xl">
+    <p>You do not have permissions for the requested resource.</p>
+  </div>
+  <div class="flex justify-center">
+    <button class="btn btn-accent text-white" data-cy="menu-btn">
+      <a (click)="navigate()">
+        <i class="bi bi-arrow-left-circle-fill pe-2"></i>
+        Return
+      </a>
+    </button>
+  </div>
+</div>

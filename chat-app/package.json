@@ -1,0 +1,60 @@
+{
+  "name": "app-front",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "dev": "ng serve --proxy-config proxy.conf.json -o --configuration development --hmr",
+    "build:production": "ng build --configuration production",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "16.0.0",
+    "@angular/common": "16.0.0",
+    "@angular/compiler": "16.0.0",
+    "@angular/core": "16.0.0",
+    "@angular/forms": "16.0.0",
+    "@angular/platform-browser": "16.0.0",
+    "@angular/platform-browser-dynamic": "16.0.0",
+    "@angular/router": "16.0.0",
+    "@ngrx/store": "16.2.0",
+    "bootstrap-icons": "1.10.5",
+    "jwt-decode": "^3.1.2",
+    "ngx-webstorage": "^12.0.0",
+    "rxjs": "7.8.0",
+    "zone.js": "0.13.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "16.0.1",
+    "@angular-eslint/schematics": "16.1.0",
+    "@angular/cli": "16.0.1",
+    "@angular/compiler-cli": "16.0.0",
+    "@ngrx/eslint-plugin": "16.2.0",
+    "@types/jasmine": "4.3.0",
+    "@typescript-eslint/eslint-plugin": "6.4.0",
+    "@typescript-eslint/parser": "6.6.0",
+    "autoprefixer": "10.4.14",
+    "daisyui": "3.5.1",
+    "eslint": "8.47.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-prettier": "5.0.0",
+    "jasmine-core": "4.6.0",
+    "karma": "6.4.0",
+    "karma-chrome-launcher": "3.2.0",
+    "karma-coverage": "2.2.0",
+    "karma-jasmine": "5.1.0",
+    "karma-jasmine-html-reporter": "2.0.0",
+    "lint-staged": "14.0.0",
+    "postcss": "8.4.27",
+    "prettier": "3.0.2",
+    "tailwindcss": "3.3.3",
+    "tslib": "2.6.2",
+    "typescript": "5.0.2"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.ts": "prettier --write"
+  }
+}

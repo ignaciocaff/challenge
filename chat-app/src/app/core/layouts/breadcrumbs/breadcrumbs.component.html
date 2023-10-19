@@ -1,0 +1,16 @@
+<div *ngIf="(breadcrumbs$ | async) as breadcrumbs">
+  <div class="text-md breadcrumbs w-full max-w-7xl mx-auto p-4" [ngClass]="breadcrumbs.length > 0 ? '' : 'hidden'">
+    <ul>
+      <ng-container *ngFor="let breadcrumb of breadcrumbs; let i = index">
+        <li>
+          <a [href]="breadcrumb.url" [ngClass]="{
+              'font-bold': i === breadcrumbs.length - 1,
+              'text-appPrimary': i !== breadcrumbs.length - 1
+            }">
+            {{ breadcrumb.label }}
+          </a>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>

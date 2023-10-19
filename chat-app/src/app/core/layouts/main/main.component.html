@@ -1,0 +1,14 @@
+<div class="flex flex-col min-h-screen">
+  <app-navbar *ngIf='getLoggedUser() | async as user'></app-navbar>
+
+  <div class="flex flex-col flex-1 bg-appBase200">
+    <div *ngIf='getLoggedUser() | async as user' class="flex-0">
+      <app-breadcrumbs></app-breadcrumbs>
+    </div>
+    <div class="bg-appBase100 flex-1">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  <app-spinner></app-spinner>
+  <app-toast-container></app-toast-container>
+</div>
