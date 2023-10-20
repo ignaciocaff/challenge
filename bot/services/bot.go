@@ -27,12 +27,17 @@ func NewBot(env env.EnvApp) *Bot {
 
 func (b *Bot) Connect() {
 	conn, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%s/", b.Env.RmqUser, b.Env.RmqPass, b.Env.RmqHost, b.Env.RmqPort))
-	b.failOnError(err, "Failed to connect to RabbitMQ")
+	if err != nil {
+		fmt.Printf("Failed to connect to RabbitMQ.\n")
+	}
+	fmt.Println("Connected to RabbitMQ")
 	defer conn.Close()
 	ch, err := conn.Channel()
-	b.failOnError(err, "Failed to open a channel")
+	if err != nil {
+		fmt.Printf("Failed to open a channel....\n")
+	}
 	defer ch.Close()
-
+	fmt.Printf("Declaring queue %s\n", b.Env.BotQueue)
 	q, err := ch.QueueDeclare(
 		b.Env.BotQueue, // name
 		false,          // durable
@@ -41,7 +46,10 @@ func (b *Bot) Connect() {
 		false,          // no-wait
 		nil,            // arguments
 	)
-	b.failOnError(err, "Failed to declare a queue")
+	fmt.Printf("Declared queue after %s\n", q.Name)
+	if err != nil {
+		fmt.Printf("Failed to declare queue %s.\n", b.Env.BotQueue)
+	}
 
 	msgs, err := ch.Consume(
 		q.Name, // queue
@@ -52,39 +60,43 @@ func (b *Bot) Connect() {
 		false,  // no-wait
 		nil,    // args
 	)
-	b.failOnError(err, "Failed to register a consumer")
-	fmt.Printf(" [*] Waiting for messages. To exit press CTRL+C")
-	for d := range msgs {
-		go b.handleMessage(d, ch)
+	fmt.Printf("Consuming queue after %s %v\n", q.Name, msgs)
+	if err != nil {
+		fmt.Printf("Failed to register a consumer. Retrying ...\n")
 	}
+	fmt.Println("[*] Waiting for messages. To exit press CTRL+C")
+	for d := range msgs {
+		log.Printf("Received a message: %s", d.Body)
+		var post Post
+		err := json.Unmarshal(d.Body, &post)
+		if err != nil {
+			log.Printf("Received bad response : %s %v ", string(d.Body), err)
+			return
+		}
+		go b.createRoomQueue(post.RoomId, ch)
+		go b.handleMessage(post, ch)
+	}
+
 }
 
-func (b *Bot) handleMessage(d amqp.Delivery, ch *amqp.Channel) {
-	log.Printf("Received a message: %s", d.Body)
-	var post Post
-	err := json.Unmarshal(d.Body, &post)
-	if err != nil {
-		log.Printf("Received bad response : %s %v ", string(d.Body), err)
-		return
-	}
+func (b *Bot) handleMessage(post Post, ch *amqp.Channel) {
 	data, err := b.FetchFile(post.Text)
 	if err != nil {
 		log.Printf("Error fetching file: %v", err)
+		b.sendMessageToRoom(post.RoomId, "Error fetching file", ch)
 		return
 	}
 	msg, err := b.Process(data, post.Text)
 	if err != nil {
 		log.Printf("Error processing file: %v", err)
+		b.sendMessageToRoom(post.RoomId, "Error processing file", ch)
 		return
 	}
 	log.Printf("Message to send: %s", msg)
-
-	go func() {
-		b.sendMessageToRoom(post.RoomId, msg, ch)
-	}()
+	b.sendMessageToRoom(post.RoomId, msg, ch)
 }
 
-func (b *Bot) sendMessageToRoom(roomID, message string, ch *amqp.Channel) {
+func (b *Bot) createRoomQueue(roomID string, ch *amqp.Channel) {
 	q, err := ch.QueueDeclare(
 		roomID, // name
 		false,  // durable
@@ -94,11 +106,15 @@ func (b *Bot) sendMessageToRoom(roomID, message string, ch *amqp.Channel) {
 		nil,    // arguments
 	)
 	b.failOnError(err, "Failed to declare a queue")
+	log.Printf("Queue %s created", q.Name)
+}
+
+func (b *Bot) sendMessageToRoom(roomID, message string, ch *amqp.Channel) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	err = ch.PublishWithContext(ctx,
+	err := ch.PublishWithContext(ctx,
 		"",     // exchange
-		q.Name, // routing key
+		roomID, // routing key
 		false,  // mandatory
 		false,  // immediate
 		amqp.Publishing{

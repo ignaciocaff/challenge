@@ -43,6 +43,17 @@ func NewRoom(roomId string, ch *amqp.Channel) *Room {
 // Start handles the connection of a client to a room
 
 func (r *Room) Start() {
+	_, err := r.ch.QueueDeclare(
+		r.roomId, // name
+		false,  // durable
+		false,  // delete when unused
+		false,  // exclusive
+		false,  // no-wait
+		nil,    // arguments
+	)
+	if err != nil {
+		fmt.Printf("Error declaring queue %v\n", err)
+	}
 	for {
 		select {
 		case client := <-r.join:

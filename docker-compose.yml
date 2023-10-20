@@ -1,11 +1,49 @@
 version: "3.5"
 services:
+  bot:
+    build:
+      context: bot/
+      dockerfile: Dockerfile
+    container_name: bot
+    networks:
+      - network_jobsity
+    depends_on:
+      jobsity-rabbitmq:
+        condition: service_healthy
+  chat-api:
+    build:
+      context: chat-api/
+      dockerfile: Dockerfile
+    container_name: chat-api
+    ports:
+      - 3000:3000
+    environment:
+      - environment=dev
+    networks:
+      - network_jobsity
+    depends_on:
+      jobsity-rabbitmq:
+        condition: service_healthy
+  chat-app:
+    build:
+      context: chat-app/
+      dockerfile: Dockerfile
+    container_name: chat-app
+    ports:
+      - 80:80
+    networks:
+      - network_jobsity
   jobsity-rabbitmq:
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 15s
+      retries: 5
     container_name: jobsity-rabbitmq
     hostname: jobsity-rabbitmq
     image: rabbitmq:3-management
     restart: unless-stopped
-    ports: 
+    ports:
       - 5672:5672
       - 15672:15672
     networks:
@@ -24,7 +62,7 @@ services:
       MONGO_INITDB_DATABASE: jobsity
       MONGO_INITDB_ROOT_USERNAME: guest
       MONGO_INITDB_ROOT_PASSWORD: guest
-      
+
 networks:
   network_jobsity:
 volumes:
