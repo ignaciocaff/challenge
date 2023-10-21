@@ -66,7 +66,7 @@ and try again.
 
 # Bonus
 
-You can try the application running at the following link -
+You can try the application running at the following link - http://ec2-54-86-116-61.compute-1.amazonaws.com/rooms/653446a2ffd86edf72bc8ef0
 
 It was deployed on an AWS EC2 instance. Be patieent it's free tier
 
