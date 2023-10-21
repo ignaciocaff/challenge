@@ -1,7 +1,7 @@
 package env
 
 import (
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -21,7 +21,7 @@ type EnvApp struct {
 func GetEnv(envFile string) EnvApp {
 	err := godotenv.Load(envFile)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("%v", err)
 	}
 
 	return EnvApp{

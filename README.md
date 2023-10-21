@@ -11,106 +11,178 @@
 
 ### Important
 
-Se decidió en el componente que renderiza finalmente los valores de las lineas utilizar
-```javascript
-.toLocaleString()?.replace(/[.,]/g, '')
-```
-Esto es porque en algunos casos el número que devolvía la linea era muy grande y como el requierimiento era que la api devuelva tipo number, se decidió hacerlo de esta manera para que se vea más amigable, eliminando los puntos y mostrando el número tal cual estaba originalmente en el .csv
+* The easiest way to set up the entire project is with Docker. If you don't have it, you can skip that section entirely.
 
-Se configuro .gitattributes para que pise los archivos .csv el EOL a LF en lugar de CRLF porque sino rompe los tests al clonarlo en windows
+* No user or room creation were developed. For the sake of the challenge, I did not consider them necessary due to their low complexity. That's why they are inserted automatically through a script when the MongoDB container starts. If you're not using Docker to start the MongoDB and Rabbit containers and you have a local instance, you must insert the documents into 'users' and 'rooms' collecitions manually both of them in the 'jobsity' database or de MONGO_DB_NAME you set in the .env file.
+
+* The bot is not a user, it is a service that is listening to the RabbitMQ queue. It is not necessary to create it as a user in the database.
+
+* There is no log files in the project. The logs are printed in the console.
+
+* If you use /stock command, the bot will send a message to the chat room with the stock information. If the stock does not exist, the bot will send a message to the chat room indicating that the stock does not exist and all the room users would receive the message. You will not see the message /stock but you will see the bot response
+
+* The /stock command is case-sensitive. If you use it in uppercase, it won't work, and this is intentional. I could have validated or used 'to lower,' but the challenge was explicit with '/stock'.
+
+* It was decided to handle authentication with the session + cookie approach, as opposed to using tokens. This way, the frontend is completely agnostic to the login process. All it needs to do is make requests to the /auth and /me URLs, but apart from that, it doesn't know what's happening. A simple in-memory session was implemented to identify if it's valid or not. For the challenge's purposes, the implementation was simplified
+
+* Due to time constraints, message encryption before storing them in the database was not implemented. It is a feature that should be implemented in a real-world scenario 
+
+* Password encryption at the time of logging in was not implemented. It is a feature that should be implemented in a real-world scenario
 
 - Frontend
-    - Se utilizo props en un solo componente muy chico en lugar de context. En una relación directa ya que se considera que no había posibilidades de prop drilling
-    - Se utilizo redux para el manejo de estado de la aplicación, en el caso de el estado "files", tendría más sentido si se removieran o adicionaran archivos de alguna manera
-    - Cuando renderiza la aplicación se llama con useEffect a la consulta general. Luego en el filtro de búsqueda por nombre hay 2 variantes:
-        - Si el input esta vacío y se ejecuta la consulta se muestra la lista completa (La busca d nuevo así en backend, no hay validacion de campo)
-        - Si el input tiene un valor va al backend a la consulta por nombre
-        - La consulta por nombre podría buscarse en el store de redux, pero se llama al backend para mostrar el uso del endpoint planteado en el punto adicional
-    - Se utilizo tailwind para el manejo de estilos
+    - Technologies used: Angular 16, TailwindCSS, DaisyUI, Socket.io-client
     
-- Backend:
-    - Se configuro standardjs y el comando npm run lint
-    - Se configuro el type = "module" en el package.json para poder utilizar import en lugar de require
-    - Se utilizo express para el manejo de rutas y middlewares
-    - Se utilizo axios para el manejo de peticiones externas
-    - Se utilizo pino para el manejo de logs
-    - Se utilizo mocha, chai y sinon para el manejo de pruebas unitarias y de api
-    - Se utilizo dotenv para el manejo de variables de entorno (Se ejemplifica con .env y .env.prod) asumiento este último para la construcción en docker
+- API
+    - Technologies used: Go 1.21, MongoDB, RabbitMQ, Websockets
+
+- Bot
+    - Technologies used: Go 1.21, RabbitMQ
 
 # Dockerization
 
-Se ha incluido un archivo Dockerfile en cada uno de los proyectos para facilitar la ejecución de los mismos en un entorno de desarrollo local. Para ejecutar la aplicación dockerizada se debe correr el siguiente comando en la raíz del proyecto:
+Dockerfiles have been included in each of the projects to facilitate their execution in a local development environment. To run the containerized application, you should execute the following command at the project's root:
 
 ```bash
 docker-compose up --build -d
 ```
-Lo que levantara los contendores de la api y el front en los puertos 8080 y 80 respectivamente.
-Swagger estará disponible en /api-docs
+
+1. It will start the necessary MongoDB and RabbitMQ services to run the project
+
+2. It will automatically insert users and chat rooms into MongoDB.
+Which will raise the api, the bot front containers on ports 8080 and 80 respectively.
+
+3. Furthermore, it will start the front-end, API, and bot.
+
+After executing the command, if everything started correctly, we should simply navigate to localhost on port 80
 
 # Bonus
 
-Se puede probar la aplicación funcionando en el siguiente link -
+You can try the application running at the following link -
 
-Fue desplegada en una EC2 de aws.
+It was deployed on an AWS EC2 instance.
 
 # Backend
 
-## Installation
-
-1. Clona este repositorio.
-
-2. Ejecuta los siguientes comandos
-```bash
-cd api
-npm install
-```
-
 ## Usage
 
-Para iniciar la API, ejecuta:
+You have several ways to run it
+
+### Makefile
+
+The following command should always be executed at the root of the repository
+
+To run:
 
 ```bash
-cd api
-npm start
+make run-chat-api
 ```
 
-La API estará disponible en http://localhost:8080
-Swagger estará disponible en http://localhost:8080/api-docs
+The chat-api will be available at  http://localhost:3000
+
+### Manual
+
+The following commands should always be executed at the root of the repository
+
+To run:
+
+```bash
+cd chat-api
+go run ./cmd/chat/main.go
+```
+
+The chat-api will be available at  http://localhost:3000
 
 ## Test
 
-Se han incluido pruebas unitarias para asegurar la calidad del código disponibles en el archivo fileService.js y pruebas de api en el archivo api.js. Para ejecutar las pruebas, utiliza:
+You have several ways to run it
+
+### Makefile
+
+The following command should always be executed at the root of the repository
+
+To run:
 
 ```bash
-cd api
-npm test
+make test-services-ws
 ```
 
-Esto ejecutará las pruebas utilizando Mocha, Chai y Sinon (Este último para mockear respuestas de la api externa que se consume archivos disponibles en /mocks).
+### Manual
 
+The following commands should always be executed at the root of the repository
+
+To run:
+
+```bash
+cd chat-api
+go test ./services/ws
+```
 
 ## Structure
 
+Below, I provide an incomplete but representative overview of the bot structure
+
 ```bash
-api
-├── mocks                # Mocks para simular datos en el entorno de desarrollo (.csv).
-├── src                  
-│   ├── configs          # Configuraciones de variables de entorno.
-│   ├── controllers      # Controladores para manejar las solicitudes.
-│   ├── cors             # Configuración de CORS (Cross-Origin Resource Sharing).
-│   ├── errors           # Manejo de errores personalizados (Middleware)
-│   ├── logger           # Configuración y utilidades para el registro de eventos en consola usando pino.
-│   ├── models           # Definición de modelos de negocio.
-│   ├── routes           # Definición de las rutas de la API.
-│   ├── services         # Lógica de negocio.
-│   ├── thirdParty       # Integraciones con servicios de terceros.
-├── test                 # Pruebas de la API (Contiene tests de valor limite y también de API).
-├── .env                 # Archivo de variables de entorno (desarrollo).
-├── .env.prod            # Archivo de variables de entorno (producción).
-├── .nvmrc               # Versión de Node.js recomendada para la API.
-├── Dockerfile           # Instrucciones para construir una imagen de Docker.
+chat-api
+├── cmd                 #  entry point of the application.                 
+├── database            #  Database configuration and migrations.
+├── env                 #  Environment variables for the application.     
+├── handlers            #  Handlers for the application.
+├── services            #  Services that are used in the application WS, HTTP and RabbitMQ.
+├── utils               #  Session manager utility.
+├── server              #  Main configuration of the server and middlewares
+├── Dockerfile          #  Instructions to build a Docker image.    
 ```
 
+# Bot
+
+## Usage
+
+You have several ways to run it
+
+### Makefile
+
+The following command should always be executed at the root of the repository
+
+To run:
+
+```bash
+make run-bot
+```
+
+The bot will be running in the background or in the console where you execute the command. The message that indicates it has started successfully is as follows:
+
+```bash
+[*] Waiting for messages. To exit, press CTRL+C.
+```
+
+### Manual
+
+The following commands should always be executed at the root of the repository
+
+To run:
+
+```bash
+cd bot
+go run ./cmd/bot.go
+```
+
+The bot will be running in the background or in the console where you execute the command. The message that indicates it has started successfully is as follows:
+
+```bash
+[*] Waiting for messages. To exit, press CTRL+C.
+```
+
+## Structure
+
+Below, I provide an incomplete but representative overview of the bot structure
+
+```bash
+bot
+├── cmd                 #  entry point of the application.                 
+├── env                 #  Environment variables for the application.     
+├── services            #  Services that are used in the application (Stooq api and RabbitMQ)    
+├── Dockerfile          # Instructions to build a Docker image.    
+```
 
 # Frontend
 
@@ -118,70 +190,45 @@ api
 
 The first thing you should do is install the npm dependencies for Angular.
 
-
-### Docker
-
-
-
-
-The front end will be available at  http://localhost
-
+Then you have several ways to run it
 
 ### Makefile
 
-```bash
-make install-app
-```
+The following commands should always be executed at the root of the repository
 
-
-The front end will be available at  http://localhost:4200
-
-### Manual
-
-```bash
-cd cht-app
-npm run i
-```
-
-
-The front end will be available at  http://localhost:4200
-
-
-The first thing you should do is install the npm dependencies for Angular.
-
-1. If you have Make installed, while in the project's root directory, execute the command 
+To install dependencies:
 
 ```bash
 make install-app
 ```
 
-2. If you don't have Make installed, run the following commands:
-
-```bash
-cd cht-app
-npm run i
-```
-
-Then you have several ways to run it
-
-If you are using Docker, the front end will be available at http://localhost
-
-If you don't have Docker, you have two alternatives:
-
-1. If you have Make installed, while in the project's root directory, execute the command 
+To run:
 
 ```bash
 make run-chat-app
 ```
 
-2. If you don't have Make installed, run the following commands:
+The front end will be available at  http://localhost:4200
+
+### Manual
+
+The following commands should always be executed at the root of the repository
+
+To install:
 
 ```bash
-cd cht-app
+cd chat-app
+npm run i
+```
+
+To run:
+
+```bash
+cd chat-app
 npm run dev
 ```
 
-For both of the described cases, the front end will be available at  http://localhost:4200
+The front end will be available at  http://localhost:4200
 
 ## Structure
 
