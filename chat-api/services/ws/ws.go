@@ -46,7 +46,7 @@ func (ws *WsServer) ServeWs(w http.ResponseWriter, r *http.Request, roomID strin
 	// Check if the room exists on the map, if it doesn't exist, create a new one
 	room, exists := ws.rooms[roomID]
 	if !exists {
-		room = NewRoom(roomID, ws.rmq.GetChannel())
+		room = NewRoom(roomID, ws.rmq.GetChannel(), ws.config)
 		_, err := room.ch.QueueDeclare(
 			roomID, // name
 			false,  // durable
@@ -63,7 +63,7 @@ func (ws *WsServer) ServeWs(w http.ResponseWriter, r *http.Request, roomID strin
 	}
 
 	// Continue handling WebSocket communication here
-	client := NewClient("clientID", conn, room, ws.db)
+	client := NewClient("clientID", conn, room, ws.db, ws.config)
 	room.join <- client
 	defer func() { room.leave <- client }()
 	go client.Write()

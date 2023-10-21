@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"chatjobsity/env"
 	"chatjobsity/models"
 	"context"
 	"encoding/json"
@@ -23,17 +24,20 @@ type Client struct {
 	room *Room
 	// db is the database connection
 	db *mongo.Client
+	// env is the environment variables
+	env env.EnvApp
 }
 
 // NewClient makes a new client that is ready to chat
 
-func NewClient(name string, socket *websocket.Conn, room *Room, db *mongo.Client) *Client {
+func NewClient(name string, socket *websocket.Conn, room *Room, db *mongo.Client, env env.EnvApp) *Client {
 	return &Client{
 		name:   name,
 		socket: socket,
 		send:   make(chan []byte),
 		room:   room,
 		db:     db,
+		env:    env,
 	}
 }
 
@@ -70,7 +74,7 @@ func (c *Client) InsertMessage(msg []byte) error {
 		return err
 	}
 	if !strings.HasPrefix(message.Text, "/stock=") {
-		collection := c.db.Database("jobsity").Collection("messages")
+		collection := c.db.Database(c.env.MongoDbName).Collection("messages")
 		newMessage := models.Message{
 			RoomId: c.room.roomId,
 			Sender: models.Sender{Id: message.Sender.Id, Username: message.Sender.Username},

@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"chatjobsity/env"
 	"chatjobsity/models"
 	"context"
 	"encoding/json"
@@ -25,11 +26,13 @@ type Room struct {
 	clients map[*Client]bool
 	// rabbitmq channel
 	ch *amqp.Channel
+	// env is the environment variables
+	env env.EnvApp
 }
 
 // NewRoom makes a new room that is ready to go
 
-func NewRoom(roomId string, ch *amqp.Channel) *Room {
+func NewRoom(roomId string, ch *amqp.Channel, env env.EnvApp) *Room {
 	return &Room{
 		roomId:  roomId,
 		forward: make(chan []byte),
@@ -37,6 +40,7 @@ func NewRoom(roomId string, ch *amqp.Channel) *Room {
 		leave:   make(chan *Client),
 		clients: make(map[*Client]bool),
 		ch:      ch,
+		env:     env,
 	}
 }
 
@@ -68,7 +72,7 @@ func (r *Room) Start() {
 				err := r.ch.PublishWithContext(
 					context.Background(),
 					"",
-					"bot_queue",
+					r.env.BotQueue,
 					false,
 					false,
 					amqp.Publishing{

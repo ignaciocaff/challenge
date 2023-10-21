@@ -44,7 +44,7 @@ func authRoutes(server *AppServer) {
 
 func roomRoutes(server *AppServer) {
 	group := server.Engine.Group("/api")
-	service := services.NewRoomService(server.db)
+	service := services.NewRoomService(server.db, server.config)
 	handler := handlers.NewRoomHandler(service)
 	group.Use(AuthRequired)
 	group.GET("/rooms", handler.Rooms)

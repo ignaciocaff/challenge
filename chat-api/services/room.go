@@ -1,6 +1,7 @@
 package services
 
 import (
+	"chatjobsity/env"
 	"chatjobsity/models"
 	"context"
 
@@ -15,16 +16,17 @@ type RoomService interface {
 }
 
 type roomService struct {
-	db *mongo.Client
+	db  *mongo.Client
+	env env.EnvApp
 }
 
-func NewRoomService(db *mongo.Client) *roomService {
-	return &roomService{db: db}
+func NewRoomService(db *mongo.Client, env env.EnvApp) *roomService {
+	return &roomService{db: db, env: env}
 }
 
 func (s *roomService) Rooms() ([]*models.Room, error) {
 	var rooms []*models.Room
-	collection := s.db.Database("jobsity").Collection("rooms")
+	collection := s.db.Database(s.env.MongoDbName).Collection("rooms")
 
 	cursor, err := collection.Find(context.Background(), bson.M{})
 	if err != nil {
@@ -65,7 +67,7 @@ func (s *roomService) Messages(roomId string) ([]*models.Message, error) {
 		if err := cursor.Decode(&message); err != nil {
 			return nil, err
 		}
-        messages = append([]*models.Message{&message}, messages...)
+		messages = append([]*models.Message{&message}, messages...)
 		if len(messages) >= 50 {
 			break
 		}

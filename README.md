@@ -59,7 +59,7 @@ After executing the command, if everything started correctly, we should simply n
 
 You can try the application running at the following link -
 
-It was deployed on an AWS EC2 instance.
+It was deployed on an AWS EC2 instance. Be patieent it's free tier
 
 # Backend
 

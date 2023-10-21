@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"chatjobsity/env"
 	"chatjobsity/models"
 	"encoding/json"
 	"net/http"
@@ -16,12 +17,17 @@ import (
 
 var mockMessage = "{\"id\":\"testroom\",\"text\":\"hello testing\",\"sender\":{\"username\":\"testclient\",\"id\":\"testclient\"},\"roomId\":\"testroom\",\"date\":\"2023-10-20T17:52:42.9212761-03:00\"}"
 
+var envApp = env.EnvApp{
+	MongoDbName: "jobsity",
+	BotQueue:    "bot_queue",
+}
+
 /*
 This test checks behavior of the room with clients with and without messages
 */
 func TestRoomBehaviorAndConnections(t *testing.T) {
 	// Create room
-	room := NewRoom("testroom", nil)
+	room := NewRoom("testroom", nil, envApp)
 	go room.Start()
 
 	// Create ws server
@@ -61,7 +67,7 @@ func TestRoomBehaviorAndConnections(t *testing.T) {
 }
 
 func setInitialStage(conn *websocket.Conn, clientId string, room *Room) {
-	client := NewClient(clientId, conn, room, MongoClient())
+	client := NewClient(clientId, conn, room, MongoClient(), envApp)
 	room.join <- client
 	go client.Write()
 	client.Read()
@@ -147,9 +153,9 @@ func handlerToBeTested(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "Failed to upgrade the connection", http.StatusInternalServerError)
 		return
 	}
-	room := NewRoom("testroom", nil)
+	room := NewRoom("testroom", nil, envApp)
 	go room.Start()
-	client := NewClient("testclient", conn, room, MongoClient())
+	client := NewClient("testclient", conn, room, MongoClient(), envApp)
 	room.join <- client
 	defer func() { room.leave <- client }()
 	go client.Write()
