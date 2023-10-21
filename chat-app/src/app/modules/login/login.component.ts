@@ -11,10 +11,11 @@ export class LoginComponent {
   username: string = '';
   password: string = '';
 
-  constructor(private authService: SessionHttpService,
+  constructor(
+    private authService: SessionHttpService,
     private readonly sessionService: SessionService,
     private readonly router: Router
-  ) { }
+  ) {}
 
   login(): void {
     this.authService.authUser(this.username, this.password).subscribe({

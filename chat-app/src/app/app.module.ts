@@ -8,10 +8,9 @@ import { ComponentsModule } from './components/components.module';
 import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
-  declarations: [
-  ],
+  declarations: [],
   imports: [BrowserModule, HttpClientModule, AppRoutingModule, CoreModule, ComponentsModule],
   providers: [...httpInterceptorProviders],
   bootstrap: [MainComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -5,9 +5,6 @@ export const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    data: {
-      breadcrumbHide: true,
-    },
   },
   {
     path: 'rooms/:id',

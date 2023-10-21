@@ -8,10 +8,8 @@ import { routes } from './login.routes';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    LoginComponent
-  ],
+  declarations: [LoginComponent],
   imports: [CommonModule, RouterModule.forChild(routes), ComponentsModule, FormsModule],
   exports: [LoginComponent],
 })
-export class LoginModule { }
+export class LoginModule {}

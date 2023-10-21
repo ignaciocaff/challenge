@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class SessionHttpService {
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {}
 
   authUser(userName: string, password: string) {
     return this.http.post<User>('/api/auth', { userName, password });

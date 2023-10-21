@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { SessionHttpService } from './session-http.service';
 import { Role, User } from '../models';
-import { environment } from 'src/environments/environment';
 
 /**
  * This service is used to handle the application session.
@@ -14,7 +13,7 @@ import { environment } from 'src/environments/environment';
 export class SessionService {
   private loggedUserSubject: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
-  constructor(private readonly sessionHttp: SessionHttpService) { }
+  constructor(private readonly sessionHttp: SessionHttpService) {}
 
   me(): Observable<any> {
     return this.sessionHttp.me();

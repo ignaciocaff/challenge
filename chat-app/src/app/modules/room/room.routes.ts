@@ -9,7 +9,6 @@ export const routes: Routes = [
     component: RoomComponent,
     data: {
       pageTitle: 'Room',
-      breadcrumb: 'Room',
       roles: [APP_ROLES.ADMIN, APP_ROLES.USER],
     },
     canActivate: [AuthGuard],

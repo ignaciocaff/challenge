@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WebSocketService } from './services/websocket.service';
 import { SessionService } from 'src/app/core/services/session.service';
@@ -9,7 +9,7 @@ import { RoomService } from './services/room.service';
   selector: 'app-room',
   templateUrl: './room.component.html',
 })
-export class RoomComponent implements OnInit {
+export class RoomComponent implements OnInit, AfterViewChecked {
   @ViewChild('messageContainer') messageContainer: ElementRef | undefined;
 
   roomId?: string;
@@ -18,10 +18,12 @@ export class RoomComponent implements OnInit {
 
   messages: any = [];
 
-  constructor(private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private webSocketService: WebSocketService,
     private readonly sessionService: SessionService,
-    private readonly roomService: RoomService) { }
+    private readonly roomService: RoomService
+  ) {}
 
   ngAfterViewChecked() {
     this.scrollToBottom();
@@ -31,7 +33,7 @@ export class RoomComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe((params: { [x: string]: string; }) => {
+    this.route.params.subscribe((params: { [x: string]: string }) => {
       this.roomId = params['id'];
       this.roomService.messages(this.roomId).subscribe({
         next: (storedMessages: any) => {
@@ -59,10 +61,10 @@ export class RoomComponent implements OnInit {
       const payload = {
         sender: {
           username: this.user?.username,
-          id: this.user?.id
+          id: this.user?.id,
         },
         date: new Date(),
-        text: this.newMessage
+        text: this.newMessage,
       };
       this.webSocketService.sendMessage(payload);
       this.newMessage = '';

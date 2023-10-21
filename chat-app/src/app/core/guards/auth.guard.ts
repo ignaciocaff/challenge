@@ -1,5 +1,5 @@
-import { Injectable, isDevMode } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { map } from 'rxjs';
 import { SessionService } from '../services/session.service';
 import { User } from '../models';
@@ -11,7 +11,7 @@ export class AuthGuard {
   constructor(
     private readonly sessionService: SessionService,
     private readonly router: Router
-  ) { }
+  ) {}
 
   canActivate() {
     return this.sessionService.getLoggedUser().pipe(
@@ -20,7 +20,7 @@ export class AuthGuard {
           return this.sessionService.me().subscribe({
             next: (user: User) => {
               this.sessionService.setLoggedUser(user);
-              return true
+              return true;
             },
             error: () => {
               this.router.navigate(['/login']);
@@ -28,7 +28,7 @@ export class AuthGuard {
             },
           });
         }
-        return true
+        return true;
       })
     );
   }

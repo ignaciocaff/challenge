@@ -8,10 +8,8 @@ import { routes } from './room.routes';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    RoomComponent
-  ],
+  declarations: [RoomComponent],
   imports: [CommonModule, RouterModule.forChild(routes), ComponentsModule, FormsModule],
   exports: [RoomComponent],
 })
-export class RoomModule { }
+export class RoomModule {}

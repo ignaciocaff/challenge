@@ -2,18 +2,17 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WebSocketService {
   private socket: WebSocket | undefined;
 
-  constructor() {
-  }
+  constructor() {}
 
   public connect(roomId: string): Observable<any> {
-    this.socket = new WebSocket(`ws://localhost:3000/ws/${roomId}`,);
+    this.socket = new WebSocket(`ws://localhost:3000/ws/${roomId}`);
 
-    return new Observable(observer => {
+    return new Observable((observer) => {
       this.socket!.onmessage = (event) => {
         const data = JSON.parse(event.data);
         observer.next(data);

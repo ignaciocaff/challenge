@@ -10,9 +10,10 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   user: User | undefined;
-  constructor(private readonly sessionService: SessionService,
+  constructor(
+    private readonly sessionService: SessionService,
     private readonly router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.sessionService.getLoggedUser().subscribe((user) => {
