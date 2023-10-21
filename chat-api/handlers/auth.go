@@ -104,17 +104,6 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
 }
 
-func (h *AuthHandler) SignUp(c *gin.Context) {
-	token, err := h.authService.SignUp()
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error creating user"})
-		return
-	}
-	c.Header("authorization", token)
-	c.JSON(http.StatusOK, gin.H{})
-}
-
 type LoginJson struct {
 	Username string `json:"username"`
 	Password string `json:"password"`

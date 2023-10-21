@@ -25,7 +25,7 @@ func NewRabbitMQ(env env.EnvApp) (*RabbitMQ, error) {
 		return nil, err
 	}
 	_, err = ch.QueueDeclare(
-		"bot_queue",
+		env.BotQueue,
 		false,
 		false,
 		false,

@@ -37,7 +37,6 @@ func authRoutes(server *AppServer) {
 	service := services.New(server.db)
 	handler := handlers.New(service, server.sm)
 	group.Use(AuthRequired)
-	group.POST("/signup", handler.SignUp)
 	group.POST("/auth", handler.Login)
 	group.GET("/auth/me", handler.Me)
 	group.GET("/auth/logout", handler.Logout)

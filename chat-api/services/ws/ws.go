@@ -47,6 +47,17 @@ func (ws *WsServer) ServeWs(w http.ResponseWriter, r *http.Request, roomID strin
 	room, exists := ws.rooms[roomID]
 	if !exists {
 		room = NewRoom(roomID, ws.rmq.GetChannel())
+		_, err := room.ch.QueueDeclare(
+			roomID, // name
+			false,  // durable
+			false,  // delete when unused
+			false,  // exclusive
+			false,  // no-wait
+			nil,    // arguments
+		)
+		if err != nil {
+			fmt.Printf("Error declaring queue %v\n", err)
+		}
 		go room.Start()
 		ws.rooms[roomID] = room
 	}

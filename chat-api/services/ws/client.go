@@ -46,7 +46,7 @@ func (c *Client) Read() {
 		if err != nil {
 			return
 		}
-		c.InsertMessage(msg)
+		go c.InsertMessage(msg)
 		c.room.forward <- msg
 	}
 }
