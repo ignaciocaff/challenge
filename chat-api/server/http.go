@@ -9,6 +9,7 @@ import (
 	"chatjobsity/utils"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -23,6 +24,7 @@ type AppServer struct {
 	config env.EnvApp
 	sm     *utils.SessionManager
 	rmq    *rabbitmq.RabbitMQ
+	redis  *redis.Client
 }
 
 func (s *AppServer) configure() {
@@ -34,15 +36,16 @@ func (s *AppServer) configure() {
 	})
 }
 
-func New(ctx context.Context, db *mongo.Client, config env.EnvApp, rmq *rabbitmq.RabbitMQ) Starter {
+func New(ctx context.Context, db *mongo.Client, config env.EnvApp, rmq *rabbitmq.RabbitMQ, redis *redis.Client) Starter {
 	gin.SetMode(config.GinMode)
 	server := &AppServer{
 		gin.Default(),
 		ctx,
 		db,
 		config,
-		utils.NewSessionManager(),
+		utils.NewSessionManager(redis),
 		rmq,
+		redis,
 	}
 
 	server.configure()

@@ -45,11 +45,9 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	sessions := h.sessionManager.GetSessionsMap()
-	userSession, exists := sessions.Load(cookie)
-	session := userSession.(utils.Session)
+	session, err := h.sessionManager.GetSession(cookie)
 
-	if !exists {
+	if err != nil {
 		// If the session token is not present in session map, return a new session
 		h.sessionManager.AddSession(sessionToken, utils.Session{Id: user.Id, Username: user.Username, IsValid: true})
 		c.SetCookie("jobsity", sessionToken, 3600, "/", "", true, true)
@@ -78,11 +76,9 @@ func (h *AuthHandler) Me(c *gin.Context) {
 		return
 	}
 
-	sessions := h.sessionManager.GetSessionsMap()
-	userSession, exists := sessions.Load(cookie)
-	session := userSession.(utils.Session)
+	session, _ := h.sessionManager.GetSession(cookie)
 
-	if exists && session.IsValid {
+	if session != nil && session.IsValid {
 		c.JSON(http.StatusOK, models.User{Id: session.Id, Username: session.Username})
 		return
 	}
