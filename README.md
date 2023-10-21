@@ -53,6 +53,8 @@ Which will raise the api, the bot front containers on ports 8080 and 80 respecti
 
 3. Furthermore, it will start the front-end, API, and bot.
 
+4. All ports are exposed to the host machine, so you can access them directly from your browser. If u have a local MongoDB, RabbitMQ and Redis instance, you should stop them before running the docker-compose command or change to expose in docker-compose.yml file
+
 After executing the command, if everything started correctly, we should simply navigate to localhost on port 80
 
 If for some reason something doesn't work, run the command 
