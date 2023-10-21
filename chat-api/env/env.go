@@ -21,6 +21,11 @@ type EnvApp struct {
 	MongoUser   string
 	MongoPass   string
 	MongoDbName string
+	RedisHost   string
+	RedisPort   string
+	RedisUser   string
+	RedisPass   string
+	RedisDbName string
 	RmqHost     string
 	RmqPort     string
 	RmqUser     string
@@ -52,5 +57,10 @@ func GetEnv(envFile string) EnvApp {
 		RmqPort:     os.Getenv("RMQ_PORT"),
 		RmqUser:     os.Getenv("RMQ_USER"),
 		RmqPass:     os.Getenv("RMQ_PASS"),
+		RedisHost:   os.Getenv("REDIS_HOST"),
+		RedisPort:   os.Getenv("REDIS_PORT"),
+		RedisUser:   os.Getenv("REDIS_USER"),
+		RedisPass:   os.Getenv("REDIS_PASS"),
+		RedisDbName: os.Getenv("REDIS_DB_NAME"),
 	}
 }

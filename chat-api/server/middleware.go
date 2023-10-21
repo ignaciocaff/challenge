@@ -24,18 +24,16 @@ func AuthRequired(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
 		return
 	}
-	sessions := sessionManager.GetSessionsMap()
-	userSession, exists := sessions.Load(cookie)
-	session := userSession.(utils.Session)
+	session, err := sessionManager.GetSession(cookie)
 
-	if !exists {
+	if err != nil {
 		// If the session token is not present in session map, return an unauthorized error
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
 		return
 	}
 	// If the session is present, but is invalid, we can delete the session, and return an unauthorized status
 	if !session.IsValid {
-		sessions.Delete(cookie)
+		sessionManager.RemoveSession(cookie)
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Session invalid"})
 		return
 	}

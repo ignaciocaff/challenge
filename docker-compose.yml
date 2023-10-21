@@ -62,8 +62,21 @@ services:
       MONGO_INITDB_DATABASE: jobsity
       MONGO_INITDB_ROOT_USERNAME: guest
       MONGO_INITDB_ROOT_PASSWORD: guest
-
+  jobsity-redis:
+      image: redis:latest
+      container_name: jobsity-redis
+      command: redis-server
+      restart: always
+      ports:
+        - 6379:6379
+      volumes:
+        - redis:/data
+      environment:
+        - REDIS_PORT=6379
+      networks:
+        - network_jobsity
 networks:
   network_jobsity:
 volumes:
   mongodb_data:
+  redis:

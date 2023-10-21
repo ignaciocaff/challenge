@@ -14,7 +14,7 @@ func main() {
 	ctx := context.Background()
 	_env := env.GetEnv(".env")
 
-	client, err := database.NewMongo(ctx, _env).Connect()
+	mongo, err := database.NewMongo(ctx, _env).Connect()
 	if err != nil {
 		fmt.Printf("Error connecting to MongoDB %v", err)
 		panic(err)
@@ -29,10 +29,12 @@ func main() {
 		panic(err)
 	}
 	defer func() {
-		if err := client.Disconnect(ctx); err != nil {
+		if err := mongo.Disconnect(ctx); err != nil {
 			fmt.Printf("Error disconnecting to MongoDB %v", err)
 		}
 	}()
+	
+	redis, err := database.NewRedis(_env).Start()
 
-	server.New(ctx, client, _env, rabbitmq).Run()
+	server.New(ctx, mongo, _env, rabbitmq, redis).Run()
 }

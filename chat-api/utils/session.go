@@ -1,11 +1,14 @@
 package utils
 
 import (
-	"sync"
+	"encoding/json"
+	"fmt"
+
+	"github.com/go-redis/redis"
 )
 
 type SessionManager struct {
-	sessions *sync.Map
+	client *redis.Client
 }
 
 type Session struct {
@@ -14,29 +17,42 @@ type Session struct {
 	Id       string
 }
 
-func NewSessionManager() *SessionManager {
+func NewSessionManager(client *redis.Client) *SessionManager {
 	return &SessionManager{
-		sessions: new(sync.Map),
+		client: client,
 	}
-}
-
-func (sm *SessionManager) GetSessionsMap() *sync.Map {
-	return sm.sessions
 }
 
 func (sm *SessionManager) AddSession(key string, session Session) {
-	sm.sessions.Store(key, session)
+	marshal, _ := json.Marshal(session)
+	sm.client.Set(key, marshal, 0)
+}
+
+func (sm *SessionManager) GetSession(key string) (*Session, error) {
+	sessionMap, err := sm.client.Get(key).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	if len(sessionMap) == 0 {
+		return nil, fmt.Errorf("Session not found")
+	}
+
+	var session Session
+	err = json.Unmarshal([]byte(sessionMap), &session)
+	if err != nil {
+		return nil, err
+	}
+	return &session, nil
 }
 
 func (sm *SessionManager) InvalidSession(key string) {
-	current, ok := sm.sessions.Load(key)
-	if ok {
-		session := current.(Session)
-		session.IsValid = false
-		sm.sessions.Store(key, session)
-	}
+	session, _ := sm.GetSession(key)
+	session.IsValid = false
+	marshal, _ := json.Marshal(session)
+	sm.client.Set(key, marshal, 0)
 }
 
 func (sm *SessionManager) RemoveSession(key string) {
-	sm.sessions.Delete(key)
+	sm.client.Del(key)
 }
