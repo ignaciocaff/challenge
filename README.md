@@ -15,6 +15,8 @@
 
 * No user or room creation were developed. For the sake of the challenge, I did not consider them necessary due to their low complexity. That's why they are inserted automatically through a script when the MongoDB container starts. If you're not using Docker to start the MongoDB and Rabbit containers and you have a local instance, you must insert the documents into 'users' and 'rooms' collecitions manually both of them in the 'jobsity' database or de MONGO_DB_NAME you set in the .env file.
 
+* .env shouldn't be in the repository, but it is for testing porpouse. In a real-world scenario, it would be in the .gitignore file.
+
 * The bot is not a user, it is a service that is listening to the RabbitMQ queue. It is not necessary to create it as a user in the database.
 
 * There is no log files in the project. The logs are printed in the console.
