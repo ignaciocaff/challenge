@@ -13,7 +13,6 @@ const DEFAULT_WSPORT_IF_EMPTY = "3001"
 // Env config struct
 type EnvApp struct {
 	Port        string
-	JwtSecret   string
 	GinMode     string
 	BotQueue    string
 	MongoHost   string
@@ -45,7 +44,6 @@ func GetEnv(envFile string) EnvApp {
 
 	return EnvApp{
 		Port:        port,
-		JwtSecret:   os.Getenv("JWT_SECRET"),
 		GinMode:     os.Getenv("GIN_MODE"),
 		BotQueue:    os.Getenv("BOT_QUEUE"),
 		MongoHost:   os.Getenv("MONGO_HOST"),
