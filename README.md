@@ -23,7 +23,7 @@
 
 * The /stock command is case-sensitive. If you use it in uppercase, it won't work, and this is intentional. I could have validated or used 'to lower,' but the challenge was explicit with '/stock'.
 
-* It was decided to handle authentication with the session + cookie approach, as opposed to using tokens. This way, the frontend is completely agnostic to the login process. All it needs to do is make requests to the /auth and /me URLs, but apart from that, it doesn't know what's happening. A simple in-memory session was implemented to identify if it's valid or not. For the challenge's purposes, the implementation was simplified
+* It was decided to handle authentication with the session + cookie approach, as opposed to using tokens. This way, the frontend is completely agnostic to the login process. All it needs to do is make requests to the /auth and /me URLs, but apart from that, it doesn't know what's happening. A simple redis session was implemented to identify if it's valid or not. For the challenge's purposes, the implementation was simplified
 
 * Due to time constraints, message encryption before storing them in the database was not implemented. It is a feature that should be implemented in a real-world scenario 
 
@@ -33,7 +33,7 @@
     - Technologies used: Angular 16, TailwindCSS, DaisyUI, Socket.io-client
     
 - API
-    - Technologies used: Go 1.21, MongoDB, RabbitMQ, Websockets
+    - Technologies used: Go 1.21, MongoDB, RabbitMQ, Websockets, Redis
 
 - Bot
     - Technologies used: Go 1.21, RabbitMQ
@@ -46,7 +46,7 @@ Dockerfiles have been included in each of the projects to facilitate their execu
 docker-compose up --build -d
 ```
 
-1. It will start the necessary MongoDB and RabbitMQ services to run the project
+1. It will start the necessary MongoDB, RabbitMQ and Redis services to run the project
 
 2. It will automatically insert users and chat rooms into MongoDB.
 Which will raise the api, the bot front containers on ports 8080 and 80 respectively.
@@ -54,6 +54,13 @@ Which will raise the api, the bot front containers on ports 8080 and 80 respecti
 3. Furthermore, it will start the front-end, API, and bot.
 
 After executing the command, if everything started correctly, we should simply navigate to localhost on port 80
+
+If for some reason something doesn't work, run the command 
+
+```bash
+docker-compose down -v
+```
+and try again.
 
 # Bonus
 
