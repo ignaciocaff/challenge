@@ -68,7 +68,7 @@ and try again.
 
 # Bonus
 
-You can try the application running at the following link - http://ec2-54-86-116-61.compute-1.amazonaws.com
+You can try the application running at the following link - https://jigcaffaratti.dev (There is some problem with wss so u can't test it here for now)
 
 It was deployed on an AWS EC2 instance. Be patieent it's free tier
 
