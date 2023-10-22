@@ -40,6 +40,16 @@
 - Bot
     - Technologies used: Go 1.21, RabbitMQ
 
+
+Remember that for testing, you have users 'jobsity1' through 'jobsity10' created, all with the password '123456'. For more details, you can refer to 'mongo-init-scripts/init.js'.
+
+Example for login:
+
+```bash
+username: jobsity1
+password: 123456
+```
+
 # Dockerization
 
 Dockerfiles have been included in each of the projects to facilitate their execution in a local development environment. To run the containerized application, you should execute the following command at the project's root:
