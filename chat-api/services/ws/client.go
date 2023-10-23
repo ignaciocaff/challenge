@@ -3,6 +3,7 @@ package ws
 import (
 	"chatjobsity/env"
 	"chatjobsity/models"
+	"chatjobsity/utils"
 	"context"
 	"encoding/json"
 	"strings"
@@ -75,10 +76,14 @@ func (c *Client) InsertMessage(msg []byte) error {
 	}
 	if !strings.HasPrefix(message.Text, "/stock=") {
 		collection := c.db.Database(c.env.MongoDbName).Collection("messages")
+		encrypted, err := utils.Encrypt(message.Text, []byte(c.env.EncryptKey))
+		if err != nil {
+			return err
+		}
 		newMessage := models.Message{
 			RoomId: c.room.roomId,
 			Sender: models.Sender{Id: message.Sender.Id, Username: message.Sender.Username},
-			Text:   message.Text,
+			Text:   encrypted,
 			Date:   time.Now(),
 		}
 		_, err = collection.InsertOne(context.Background(), newMessage)

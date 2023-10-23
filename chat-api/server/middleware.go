@@ -11,7 +11,7 @@ func AuthRequired(c *gin.Context) {
 	sessionManager := c.MustGet("session_manager").(*utils.SessionManager)
 
 	currentPath := c.FullPath()
-	if currentPath == "/api/auth" || currentPath == "/api/auth/me" {
+	if currentPath == "/api/auth" || currentPath == "/api/auth/me" || currentPath == "/api/auth/signup" {
 		c.Next()
 		return
 	}

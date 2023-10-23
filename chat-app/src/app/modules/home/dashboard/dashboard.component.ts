@@ -11,7 +11,11 @@ import { Room } from 'src/app/core/models';
 export class DashboardComponent implements OnInit {
   readonly APP_ROLES = APP_ROLES;
   rooms: Room[] = [];
-
+  room: Room = {
+    name: '',
+  };
+  showModal = false;
+  isDialogOpen: boolean = false;
   constructor(
     private readonly sessionService: SessionService,
     private readonly dashboardService: DashboardService,
@@ -30,5 +34,35 @@ export class DashboardComponent implements OnInit {
 
   navigateToRoom(roomId: number) {
     this.router.navigate(['/rooms', roomId]);
+  }
+
+  openDialog() {
+    this.isDialogOpen = true;
+  }
+
+  closeDialog() {
+    this.isDialogOpen = false;
+  }
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
+
+  toggleModal(): void {
+    this.showModal = !this.showModal;
+  }
+
+  create() {
+    this.dashboardService.create(this.room).subscribe({
+      next: () => {
+        alert('Room created successfully');
+        this.dashboardService.rooms().subscribe((rooms: Room[]) => {
+          this.rooms = rooms;
+        });
+      },
+      error: (err) => {
+        alert(err?.error?.message);
+        return;
+      },
+    });
   }
 }

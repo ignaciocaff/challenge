@@ -29,6 +29,7 @@ type EnvApp struct {
 	RmqPort     string
 	RmqUser     string
 	RmqPass     string
+	EncryptKey  string
 }
 
 // Get the env configuration
@@ -60,5 +61,6 @@ func GetEnv(envFile string) EnvApp {
 		RedisUser:   os.Getenv("REDIS_USER"),
 		RedisPass:   os.Getenv("REDIS_PASS"),
 		RedisDbName: os.Getenv("REDIS_DB_NAME"),
+		EncryptKey:  os.Getenv("ENCRYPT_KEY"),
 	}
 }

@@ -17,6 +17,10 @@ export class SessionHttpService {
     return this.http.post<User>('/api/auth', { userName, password });
   }
 
+  signup(user: User) {
+    return this.http.post<User>('/api/auth/signup', user);
+  }
+
   me() {
     return this.http.get('/api/auth/me');
   }

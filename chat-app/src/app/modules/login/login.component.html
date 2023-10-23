@@ -1,25 +1,72 @@
 <div class="w-full max-w-xs mx-auto my-auto mt-32">
-    <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-        Username
-      </label>
-      <input [(ngModel)]="username"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="username" type="text" placeholder="Username">
+  <ul class="flex">
+    <li class="mr-6">
+      <a href="javascript:void(0);" (click)="setActiveTab('login')" [class.active]="activeTab === 'login'" class="text-blue-500 hover:underline">Log In</a>
+    </li>
+    <li>
+      <a href="javascript:void(0);" (click)="setActiveTab('signup')" [class.active]="activeTab === 'signup'" class="text-blue-500 hover:underline">Sign Up</a>
+    </li>
+  </ul>
+
+  <div [ngSwitch]="activeTab">
+    <div *ngSwitchCase="'login'">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+          Username
+        </label>
+        <input [(ngModel)]="username"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="username" type="text" placeholder="Username">
+      </div>
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+          Password
+        </label>
+        <input [(ngModel)]="password"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="password" type="password" placeholder="Password">
+      </div>
+      <div class="flex items-center justify-between">
+        <button (click)="login()"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="button">
+          Log In
+        </button>
+      </div>
     </div>
-    <div class="mb-6">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-        Password
-      </label>
-      <input [(ngModel)]="password"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="password" type="password" placeholder="Password">
+
+    <div *ngSwitchCase="'signup'">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+          Email
+        </label>
+        <input [(ngModel)]="email"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="email" type="email" placeholder="Email">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+          Username
+        </label>
+        <input [(ngModel)]="username"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="username" type="text" placeholder="Username">
+      </div>
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+          Password
+        </label>
+        <input [(ngModel)]="password"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="password" type="password" placeholder="Password">
+      </div>
+      <div class="flex items-center justify-between">
+        <button (click)="signup()"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="button">
+          Sign Up
+        </button>
+      </div>
     </div>
-    <div class="flex items-center justify-between">
-      <button (click)="login()"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        type="button">
-        Log In
-      </button>
-    </div>
+  </div>
 </div>

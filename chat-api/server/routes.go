@@ -34,12 +34,14 @@ func websocketRoutes(server *AppServer) {
 
 func authRoutes(server *AppServer) {
 	group := server.Engine.Group("/api")
-	service := services.New(server.db)
+	service := services.New(server.db, server.config)
 	handler := handlers.New(service, server.sm)
 	group.Use(AuthRequired)
 	group.POST("/auth", handler.Login)
 	group.GET("/auth/me", handler.Me)
 	group.GET("/auth/logout", handler.Logout)
+	group.POST("/auth/signup", handler.SignUp)
+
 }
 
 func roomRoutes(server *AppServer) {
@@ -48,5 +50,6 @@ func roomRoutes(server *AppServer) {
 	handler := handlers.NewRoomHandler(service)
 	group.Use(AuthRequired)
 	group.GET("/rooms", handler.Rooms)
+	group.POST("/rooms/create", handler.Create)
 	group.GET("/rooms/:roomId/messages", handler.Messages)
 }

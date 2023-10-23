@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"chatjobsity/models"
 	"chatjobsity/services"
 	"net/http"
 
@@ -34,4 +35,19 @@ func (h *RoomHandler) Messages(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, messages)
+}
+
+func (h *RoomHandler) Create(c *gin.Context) {
+	var room models.Room
+
+	if err := c.ShouldBind(&room); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error getting room data"})
+		return
+	}
+	if err := h.roomService.Create(room); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, room)
 }

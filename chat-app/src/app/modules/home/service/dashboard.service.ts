@@ -11,4 +11,8 @@ export class DashboardService {
   rooms() {
     return this.http.get<Room[]>('/api/rooms');
   }
+
+  create(room: Room) {
+    return this.http.post<Room[]>('/api/rooms/create', room);
+  }
 }

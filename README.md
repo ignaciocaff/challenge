@@ -13,7 +13,7 @@
 
 * The easiest way to set up the entire project is with Docker. If you don't have it, you can skip that section entirely.
 
-* No user or room creation were developed. For the sake of the challenge, I did not consider them necessary due to their low complexity. That's why they are inserted automatically through a script when the MongoDB container starts. If you're not using Docker to start the MongoDB and Rabbit containers and you have a local instance, you must insert the documents into 'users' and 'rooms' collecitions manually both of them in the 'jobsity' database or de MONGO_DB_NAME you set in the .env file.
+* User and room creation were developed, but you have 10 users and 4 rooms that are inserted automatically through a script when the MongoDB container starts. If you're not using Docker to start the MongoDB and Rabbit containers and you have a local instance, you must create users and rooms through the application
 
 * .env shouldn't be in the repository, but it is for testing porpouse. In a real-world scenario, it would be in the .gitignore file.
 
@@ -27,9 +27,7 @@
 
 * It was decided to handle authentication with the session + cookie approach, as opposed to using tokens. This way, the frontend is completely agnostic to the login process. All it needs to do is make requests to the /auth and /me URLs, but apart from that, it doesn't know what's happening. A simple redis session was implemented to identify if it's valid or not. For the challenge's purposes, the implementation was simplified
 
-* Due to time constraints, message encryption before storing them in the database was not implemented. It is a feature that should be implemented in a real-world scenario 
-
-* Password encryption at the time of logging in was not implemented. It is a feature that should be implemented in a real-world scenario
+* Message encryption was implemented but it's a simplified stage because is not e2e encryption. It is a feature that should be implemented in a real-world scenario 
 
 - Frontend
     - Technologies used: Angular 16, TailwindCSS, DaisyUI, Socket.io-client
