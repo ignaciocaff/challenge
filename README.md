@@ -30,7 +30,7 @@
 * Message encryption was implemented but it's a simplified stage because is not e2e encryption. It is a feature that should be implemented in a real-world scenario 
 
 - Frontend
-    - Technologies used: Angular 16, TailwindCSS, DaisyUI, Socket.io-client
+    - Technologies used: Angular 16, TailwindCSS, DaisyUI, Websockets
     
 - API
     - Technologies used: Go 1.21, MongoDB, RabbitMQ, Websockets, Redis
@@ -59,7 +59,6 @@ docker-compose up --build -d
 1. It will start the necessary MongoDB, RabbitMQ and Redis services to run the project
 
 2. It will automatically insert users and chat rooms into MongoDB.
-Which will raise the api, the bot front containers on ports 8080 and 80 respectively.
 
 3. Furthermore, it will start the front-end, API, and bot.
 
@@ -76,7 +75,7 @@ and try again.
 
 # Bonus
 
-You can try the application running at the following link - https://jigcaffaratti.dev (There is some problem with wss so u can't test it here for now)
+You can try the application running at the following link - https://jigcaffaratti.dev
 
 It was deployed on an AWS EC2 instance. Be patieent it's free tier
 
